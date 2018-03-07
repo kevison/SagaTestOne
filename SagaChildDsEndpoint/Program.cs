@@ -17,7 +17,8 @@ namespace SagaChildDsEndpoint
             Console.Title = "Ds Endpoint";
 
             var epCfg = new EndpointConfiguration("DsEndpoint");
-            var transport = epCfg.UseTransport<LearningTransport>();
+            //var transport = epCfg.UseTransport<LearningTransport>();
+            var transport = epCfg.UseTransport<MsmqTransport>();
 
             var epInstance = await Endpoint.Start(epCfg).ConfigureAwait(false);
 

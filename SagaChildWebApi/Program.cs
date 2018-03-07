@@ -17,7 +17,8 @@ namespace SagaChildWebApi
             Console.Title = "Wapi Endpoint";
 
             var epCfg = new EndpointConfiguration("WapiEndpoint");   // event subscriber
-            var transport = epCfg.UseTransport<LearningTransport>();
+            //var transport = epCfg.UseTransport<LearningTransport>();
+            var transport = epCfg.UseTransport<MsmqTransport>();
 
             var epInstance = await Endpoint.Start(epCfg).ConfigureAwait(false);
 

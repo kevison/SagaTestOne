@@ -19,7 +19,8 @@ namespace EfWrapperEndpoint
             Console.Title = "EF Wrapper";
 
             var epCfg = new EndpointConfiguration("EfWrapper");
-            epCfg.UseTransport<LearningTransport>();
+            //epCfg.UseTransport<LearningTransport>();
+            epCfg.UseTransport<MsmqTransport>();
 
             var endpointInstance = await Endpoint.Start(epCfg).ConfigureAwait(false);
 
