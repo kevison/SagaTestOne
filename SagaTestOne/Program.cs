@@ -30,7 +30,8 @@ namespace SagaTestOne
 
             // map message routing
             var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(SendDocumentCmd), "DsEndpoint");  
+            routing.RouteToEndpoint(typeof(RequestDsSomething), "DsEndpoint");
+            routing.RouteToEndpoint(typeof(RequestSendDocument), "EfWrapper");
 
             var endpointInstance = await Endpoint.Start(epConfiguration).ConfigureAwait(false);
 
@@ -92,10 +93,9 @@ namespace SagaTestOne
                 var nGuid = Guid.NewGuid();
                 Console.WriteLine($"Request by id: {nGuid}");
 
-                var msg = new RequestSendDocument
+                var msg = new RequestDsSomething()
                 {
-                    TrackingId = nGuid,
-                    LoanNumber = "1000000123",
+                    TrackId = nGuid,
                     Status = "Send"
                 };
 

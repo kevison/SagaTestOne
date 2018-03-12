@@ -28,7 +28,7 @@ namespace EfWrapperEndpoint
                 Status = message.Status
             };
 
-            await context.Send("DsEndpoint", reqst).ConfigureAwait(false);
+            //await context.Send("DsEndpoint", reqst).ConfigureAwait(false);
 
             log.Info($"Received RequestSendDocument notification {message.LoanNumber} - {message.Status} - update db with status");
 

@@ -10,7 +10,7 @@ namespace SagaChildDsEndpoint
     {
         static ILog log = LogManager.GetLogger<DsHandler>();
 
-        public Task Handle(RequestDsSomething message, IMessageHandlerContext context)
+        public async Task Handle(RequestDsSomething message, IMessageHandlerContext context)
         {
             log.Info($"Recvd Request Ds Somthing {message.TrackId}");
 
@@ -22,8 +22,9 @@ namespace SagaChildDsEndpoint
                 Status = "Send"
             };
 
+            await context.Send("EfWrapper", msg).ConfigureAwait(false);
 
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
     }
 }
