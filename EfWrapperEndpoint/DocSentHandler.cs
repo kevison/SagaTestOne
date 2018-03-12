@@ -1,22 +1,38 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Logging;
-using SagaMessages;
+using SagaMessages.Nsb;
 
 namespace EfWrapperEndpoint
 {
-    public class DocSentHandler : IHandleMessages<DocSent>
+    public class DocSentHandler : IHandleMessages<RequestSendDocument>
     {
         static ILog log = LogManager.GetLogger<DocSentHandler>();
 
-        public Task Handle(DocSent message, IMessageHandlerContext context)
+        public async Task Handle(RequestSendDocument message, IMessageHandlerContext context)
         {
-            log.Info($"EF Wrapper has received doc sent notification {message.LoanId} - {message.TrackingId}");
+            log.Info($"Received RequestSendDocument notification {message.LoanNumber} - {message.Status}");
 
-            // make call to ef to send saga data to table....
+            var resp = new SendDocumentResponse
+            {
+                TrackingId = message.TrackingId,
+                LoanNumber = message.LoanNumber,
+                Status = "Sent"
+            };
 
+            var reqst = new RequestDsSomething
+            {
+                TrackId = message.TrackingId,
+                EnvelopeId = Guid.NewGuid(),
+                Status = message.Status
+            };
 
-            return Task.CompletedTask;
+            await context.Send("DsEndpoint", reqst).ConfigureAwait(false);
+
+            log.Info($"Received RequestSendDocument notification {message.LoanNumber} - {message.Status} - update db with status");
+
+            //return Task.CompletedTask;
         }
     }
 }

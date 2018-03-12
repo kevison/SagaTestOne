@@ -1,6 +1,5 @@
 ﻿//=================================================================================
-// ef wrapper endpoint... subscribes to docsent, docrecvd, etc....
-// 
+// ef wrapper endpoint... 
 // from the handlers... update table accordingly.
 //=================================================================================
 using System;
@@ -10,6 +9,9 @@ using NServiceBus.Logging;
 
 namespace EfWrapperEndpoint
 {
+     /*********************************************************
+     * Subscriber endpoint
+    **********************************************************/
     class Program
     {
         private static ILog log = LogManager.GetLogger<Program>();
@@ -19,8 +21,8 @@ namespace EfWrapperEndpoint
             Console.Title = "EF Wrapper";
 
             var epCfg = new EndpointConfiguration("EfWrapper");
-            //epCfg.UseTransport<LearningTransport>();
-            epCfg.UseTransport<MsmqTransport>();
+            epCfg.UseTransport<LearningTransport>();
+            epCfg.UsePersistence<LearningPersistence>();
 
             var endpointInstance = await Endpoint.Start(epCfg).ConfigureAwait(false);
 

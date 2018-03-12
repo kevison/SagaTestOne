@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Logging;
 using SagaMessages;
+using SagaMessages.Nsb;
 
 namespace SagaTestOne
 {
@@ -26,12 +27,14 @@ namespace SagaTestOne
 
             // setup to send to another endpoint
             var transport = epConfiguration.UseTransport<LearningTransport>();
+
+            // map message routing
             var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(SendDocumentCmd), "DsEndpoint");  // establish command placeorder 
+            routing.RouteToEndpoint(typeof(SendDocumentCmd), "DsEndpoint");  
 
             var endpointInstance = await Endpoint.Start(epConfiguration).ConfigureAwait(false);
 
-            await RunLoop(endpointInstance).ConfigureAwait(false);
+            await RunLoop2(endpointInstance).ConfigureAwait(false);
 
             await endpointInstance.Stop().ConfigureAwait(false);
         }
@@ -66,6 +69,38 @@ namespace SagaTestOne
                         log.Info("Unknown input, please try again.");
                         break;
                 }
+            }
+
+        }
+
+        static async Task RunLoop2(IEndpointInstance endpointInstance)
+        {
+            Console.Clear();
+
+            while (true)
+            {
+                log.Info("Press 'enter' to publish, or 'Q' to quit.");
+
+                var key = Console.ReadKey();
+                Console.WriteLine();
+
+                if (key.Key != ConsoleKey.Enter)
+                {
+                    break;
+                }
+
+                var nGuid = Guid.NewGuid();
+                Console.WriteLine($"Request by id: {nGuid}");
+
+                var msg = new RequestSendDocument
+                {
+                    TrackingId = nGuid,
+                    LoanNumber = "1000000123",
+                    Status = "Send"
+                };
+
+                await endpointInstance.Send("DsEndpoint", msg).ConfigureAwait(false);
+
             }
 
         }

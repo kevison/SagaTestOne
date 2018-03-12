@@ -1,5 +1,6 @@
 ﻿//=====================================================================
-// this endpoint would handle commands
+// ds endpoint
+// this endpoint would handle commands?? or published messages
 //=====================================================================
 using System;
 using System.Threading.Tasks;
@@ -8,6 +9,9 @@ using NServiceBus.Logging;
 
 namespace SagaChildDsEndpoint
 {
+    /*********************************************************
+     * Subscriber endpoint
+    **********************************************************/
     class Program
     {
         static ILog log = LogManager.GetLogger<Program>();
@@ -17,13 +21,15 @@ namespace SagaChildDsEndpoint
             Console.Title = "Ds Endpoint";
 
             var epCfg = new EndpointConfiguration("DsEndpoint");
-            //var transport = epCfg.UseTransport<LearningTransport>();
-            var transport = epCfg.UseTransport<MsmqTransport>();
+            var transport = epCfg.UseTransport<LearningTransport>();
+            epCfg.UsePersistence<LearningPersistence>();
 
             var epInstance = await Endpoint.Start(epCfg).ConfigureAwait(false);
 
             Console.WriteLine("DS endpoint created. Press Enter to exit.");
             Console.ReadLine();
+
+            await epInstance.Stop().ConfigureAwait(false);
         }
     }
 }
