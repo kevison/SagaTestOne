@@ -5,7 +5,6 @@
 //
 //
 //================================================================================
-
 using System;
 using System.Threading.Tasks;
 using NServiceBus;
@@ -29,9 +28,9 @@ namespace SagaTestOne
             var transport = epConfiguration.UseTransport<LearningTransport>();
 
             // map message routing
-            var routing = transport.Routing();
-            routing.RouteToEndpoint(typeof(RequestDsSomething), "DsEndpoint");
-            routing.RouteToEndpoint(typeof(RequestSendDocument), "EfWrapper");
+            //var routing = transport.Routing();
+            //routing.RouteToEndpoint(typeof(RequestDsSomething), "DsEndpoint");
+            //routing.RouteToEndpoint(typeof(RequestSendDocument), "EfWrapper");
 
             var endpointInstance = await Endpoint.Start(epConfiguration).ConfigureAwait(false);
 
